@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Request New User</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      border: 1px solid #d8942e;
+      box-shadow: 0 0 25px 3px #8f6a04 inset;
+      box-sizing: border-box;
+    }
+    .box {
+      background: #111;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgb(233, 165, 39);
+      width: 90%;
+      max-width: 340px;
+      position: relative;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+    .logo {
+      width: 180px;
+      margin-top: -320px;
+      margin-bottom: 80px;
+    }
+    h3 {
+      margin-top: 5px;
+      margin-bottom: 1=25px;
+      font-size: 25px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      width: 60%;
+      margin-left: 20px;
+      margin-top: 10px;
+      padding: 10px;
+      background: gold;
+      border: none;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #ffd700;
+    }
+    #otpSection, #createUserSection {
+      display: none;
+    }
+    .status {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .status.error {
+      color: red;
+      animation: shake 0.3s ease-in-out;
+    }
+    .status.success {
+      color: lightgreen;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-4px); }
+      100% { transform: translateX(0); }
+    }
+
+    @media (max-width: 400px) {
+      .box {
+        padding: 20px 10px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <img src="logo.png" class="logo" alt="JK Solar Logo" />
+
+  <div id="requestSection">
+    <h3>Request CRM Access</h3>
+    <input type="text" id="name" placeholder="Your Name" required />
+    <input type="email" id="email" placeholder="Your Email" required />
+    <input type="text" id="contact" placeholder="Your Contact Number" required />
+    <button onclick="submitRequest()">Send Request</button>
+  </div>
+
+  <div id="otpSection">
+    <h3>Enter OTP (Sent to Admin)</h3>
+    <input type="text" id="otp" placeholder="Enter OTP" required />
+    <button onclick="verifyOtp()">Verify OTP</button>
+  </div>
+
+  <div id="createUserSection">
+    <h3>Create Your Account</h3>
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <input type="email" id="email" placeholder="Email ID" required />
+    <input type="tel" id="phone" placeholder="Phone Number" required />
+    <select id="role">
+      <option value="User">User</option>
+      <option value="Admin">Admin</option>
+    </select>
+    <button onclick="createUser()">Create User</button>
+  </div>
+
+  <p class="status" id="statusMsg"></p>
+</div>
+<script>
+  async function submitRequest() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+    const status = document.getElementById('statusMsg');
+
+    if (!name || !email || !contact) {
+      status.innerText = "Fill all fields.";
+      status.className = "status error";
+      return;
+    }
+
+    try {
+      const res = await fetch('/request-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, contact })
+      });
+
+      const msg = await res.text();
+      status.innerText = msg;
+      status.className = res.ok ? "status success" : "status error";
+
+      if (res.ok) {
+        document.getElementById('requestSection').style.display = 'none';
+      }
+    } catch (error) {
+      console.error("❌ Request failed:", error);
+      status.innerText = "Server error. Try again.";
+      status.className = "status error";
+    }
+  }
+</script>
+
+<script>
+  let tempEmail = "";
+
+  async function createUser() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const contact = document.getElementById('phone').value.trim();
+    const role = document.getElementById('role').value;
+    const status = document.getElementById('statusMsg');
+
+    const res = await fetch('/create-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username,
+        password,
+        role,
+        email,
+        contact
+      })
+    });
+
+    const msg = await res.text();
+    status.innerText = msg;
+    status.className = res.ok ? "status success" : "status error";
+  }
+</script>
+
+</body>
+</html>

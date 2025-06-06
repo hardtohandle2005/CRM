@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create CRM Account</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      display: block;
+      margin-bottom: 15px;
+      padding: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <form action="/create-user" method="POST">
+    <h2>Create Your CRM Account</h2>
+    
+  <input type="text" name="username" placeholder="Create Username" required />
+  <input type="password" name="password" placeholder="Create Password" required />
+  <input type="email" name="email" placeholder="Your Email (same as mail)" required />
+  <input type="text" name="contact" placeholder="Your Contact Number" required />
+  <button type="submit">Create User</button>
+</form>
+
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    document.getElementById('email').value = params.get('email');
+
+    document.getElementById('userForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      if (data.password !== data.confirm) return alert('Passwords do not match');
+
+      const res = await fetch('/create-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const msg = await res.text();
+      alert(msg);
+    };
+  </script>
+</body>
+</html>

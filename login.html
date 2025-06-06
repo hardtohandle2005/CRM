@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CRM Login - JK SOLAR</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      border: 1px solid #2ebed8;
+      box-shadow: 0 0 25px 3px #047f8f inset;
+      box-sizing: border-box;
+    }
+
+    .logo {
+      width: 180px;
+      margin-top: -120px;
+      margin-bottom: 30px;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 15px;
+      padding: 30px 40px;
+      box-shadow: 0 0 20px 3px#2ebed8;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 50%;
+      margin-left: 20px;
+      margin-top: 10px;
+      padding: 12px;
+      background: #ffd700;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 10px #ffd700;
+    }
+
+    .error {
+      color: red;
+      margin-top: 8px;
+    }
+
+    .link {
+      color: #ccc;
+      margin-top: 15px;
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: color 0.3s, transform 0.2s;
+}
+
+.link:hover {
+  color: #4bccf3;
+  transform: scale(1.05);
+}
+
+    @media screen and (max-width: 480px) {
+      .login-container {
+        width: 90%;
+        padding: 25px;
+      }
+    }
+
+    /* Shake animation */
+    .shake {
+      animation: shake 0.4s;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    @keyframes shake {
+      0% { transform: translateX(0px); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-6px); }
+      100% { transform: translateX(0px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <img src="logo.png" alt="JK Solar Logo" class="logo" />
+  <div class="login-container" id="loginBox">
+    <h2>JK SOLAR CRM LOGIN</h2>
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="login()">Login</button>
+    <div class="error" id="errorMsg"></div>
+    <div class="link" onclick="requestAccess()">Request New User</div>
+    <div class="link" onclick="forgotPassword()">Forgot Password?</div>
+  </div>
+
+  <script>
+    async function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      const box = document.getElementById('loginBox');
+
+      if (!username || !password) {
+        errorMsg.innerText = "Please fill all fields";
+        box.classList.add("shake");
+        setTimeout(() => box.classList.remove("shake"), 400);
+        return;
+      }
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          window.location.href = data.redirect;
+        } else {
+          errorMsg.innerText = data.message || "Login failed";
+          box.classList.add("shake");
+          setTimeout(() => box.classList.remove("shake"), 400);
+        }
+      } catch (err) {
+        errorMsg.innerText = "Network error or server not responding.";
+        box.classList.add("shake");
+        setTimeout(() => box.classList.remove("shake"), 400);
+      }
+    }
+localStorage.setItem('username', enteredUsername);
+
+    function requestAccess() {
+      window.location.href = "request-user.html";
+    }
+
+    function forgotPassword() {
+      window.location.href = "forgot-password.html";
+    }
+
+    document.addEventListener("keydown", function (e) {
+      if ((e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 's') || e.key === 'F12') {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>

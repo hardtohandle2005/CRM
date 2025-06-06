@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Work Completion Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: white;
+      color: black;
+      padding: 40px;
+      line-height: 1.6;
+    }
+    h2 {
+      text-align: center;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    .centered-heading {
+      text-align: center;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .centered-subtext {
+      text-align: center;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      table-layout: fixed;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    td:nth-child(1) { width: 5%; }
+    td:nth-child(2) { width: 45%; }
+    td:nth-child(3) { width: 50%; }
+    .section-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .signature-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+    }
+    .address-block {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 20px;
+    }
+    .address-block > div {
+      width: 48%;
+    }
+    .enclosures {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>ANNEXURE-VIII</h2>
+  <p class="centered-heading">The Work Completion Report for installation of Solar Roof Top PV System under net metering arrangement</p>
+  <p class="centered-subtext">(To be filled by the applicant and empaneled contractor)</p>
+
+  <p>To,<br>THE SDO/OP<br>DHBVN {{dhbvn}}</p>
+
+  <p><strong>Subject:</strong><br>Regarding submission of work completion report for installation of Solar Roof Top PV System under net metering arrangement.</p>
+
+  <p><strong>Reference:</strong> Please refer to our Application Registration No.: <strong>{{applicationNo}}</strong><br>Dated: <strong>{{applicationDate}}</strong></p>
+
+  <p>Enclosed please find herewith the work completion report for the installation of Solar rooftop PV System under Net Metering Arrangement duly filled by the installer/contractor as per specification/instruction of Nigam. The details of equipment and allied material for Solar PV system are as under:-</p>
+
+  <div class="section-title">1. Solar PV System Module Detail</div>
+  <table>
+    <tr><td>a</td><td>Name of the manufacturer with address</td><td>Axitech Solar Ltd</td></tr>
+    <tr><td>b</td><td>Model No.</td><td>Axitech {{panelWp}} wp Topcon</td></tr>
+    <tr><td>c</td><td>Capacity of each Module (Wp)</td><td>{{panelWp}} wp</td></tr>
+    <tr><td>d</td><td>No. of Modules</td><td>{{panelQty}}</td></tr>
+    <tr><td>e</td><td>Total Capacity (kWp)</td><td>{{kw}}</td></tr>
+    <tr><td>f</td><td>Any other information</td><td></td></tr>
+  </table>
+
+  <div class="section-title">2. Inverter Installed Detail</div>
+  <table>
+    <tr><td>a</td><td>Name of manufacturer with address</td><td>Axitech Solar Ltd</td></tr>
+    <tr><td>b</td><td>Make of the inverter</td><td>{{inverterBrand}}</td></tr>
+    <tr><td>c</td><td>Sr No.</td><td></td></tr>
+    <tr><td>d</td><td>Model No.</td><td>5G PRO</td></tr>
+    <tr><td>e</td><td>AC capacity of individual inverter (kW)</td><td>{{kw}}</td></tr>
+    <tr><td>f</td><td>Total AC capacity of inverter kW</td><td>{{kw}}</td></tr>
+    <tr><td>g</td><td>Any other information</td><td>No</td></tr>
+  </table>
+
+  <div class="section-title">3. DC Cables Details</div>
+  <table>
+    <tr><td>a</td><td>Name of manufacturer with address</td><td>POLYCAB</td></tr>
+    <tr><td>b</td><td>Make</td><td>POLYCAB</td></tr>
+    <tr><td>c</td><td>Size & Type</td><td>4 sq mm</td></tr>
+    <tr><td>d</td><td>Any other information</td><td></td></tr>
+  </table>
+
+  <div class="section-title">4. AC Wiring Details</div>
+  <table>
+    <tr><td>A</td><td>Name of manufacturer with address</td><td>KEI</td></tr>
+    <tr><td>B</td><td>Make</td><td>KEI</td></tr>
+    <tr><td>C</td><td>Size & Type</td><td>16 sq mm 2 CORE</td></tr>
+    <tr><td>D</td><td>Any other information</td><td></td></tr>
+  </table>
+
+  <div class="section-title">5. DC Distribution Box Details</div>
+  <table>
+    <tr><td>A</td><td>Name of manufacturer with address</td><td>Sunrise Solartech</td></tr>
+    <tr><td>B</td><td>Sl. No.</td><td>N/A</td></tr>
+    <tr><td>C</td><td>DC Surge Protection Device</td><td>SPD type II</td></tr>
+    <tr><td>D</td><td>MCB / Isolator quantity & capacity</td><td>2</td></tr>
+    <tr><td>E</td><td>Size & Type</td><td>15A</td></tr>
+    <tr><td>F</td><td>Any other information</td><td></td></tr>
+  </table>
+
+  <div class="section-title">6. AC Distribution Box Details</div>
+  <table>
+    <tr><td>A</td><td>Name of manufacturer with address</td><td>Sunrise Solartech</td></tr>
+    <tr><td>B</td><td>Sl. No.</td><td>N/A</td></tr>
+    <tr><td>C</td><td>AC Surge Protection Device</td><td>Phoenix</td></tr>
+    <tr><td>D</td><td>MCB / MCCB quantity & capacity</td><td>2 POLE 32 A</td></tr>
+    <tr><td>E</td><td>Size & Type</td><td>2 POLE 32 A</td></tr>
+    <tr><td>F</td><td>Any other information</td><td></td></tr>
+  </table>
+
+  <div class="section-title">7. Battery Bank Details (if applicable)</div>
+  <table>
+    <tr><td>A</td><td>Name of manufacturer with address</td><td>None</td></tr>
+    <tr><td>B</td><td>Type of battery</td><td></td></tr>
+    <tr><td>C</td><td>Sr. Nos.</td><td></td></tr>
+    <tr><td>D</td><td>Capacity of each Cell (V / AH)</td><td></td></tr>
+    <tr><td>E</td><td>Number of Cells in series</td><td></td></tr>
+    <tr><td>F</td><td>Number of Cells in parallel</td><td></td></tr>
+    <tr><td>G</td><td>Total capacity in AH</td><td></td></tr>
+    <tr><td>H</td><td>Total battery bank voltage</td><td></td></tr>
+    <tr><td>I</td><td>Any other information</td><td></td></tr>
+  </table>
+
+  <div class="section-title">8. Earthing Details</div>
+  <table>
+    <tr><td>A</td><td>Earth resistance (shall be less than 2 ohms)</td><td>0.8 ohm</td></tr>
+    <tr><td>B</td><td>Size of the Earth wire / flat</td><td>6 & 10 sqmm wire</td></tr>
+    <tr><td>C</td><td>Two separate Earthing points</td><td>yes</td></tr>
+  </table>
+
+  <div class="section-title">9. Details of Net meter (Nigam M&T Lab Report of meter)</div>
+  <table>
+    <tr><td>a</td><td>Make</td><td></td></tr>
+    <tr><td>b</td><td>Serial No.</td><td></td></tr>
+    <tr><td>c</td><td>Capacity</td><td></td></tr>
+    <tr><td>d</td><td>Type / Model</td><td></td></tr>
+    <tr><td>e</td><td>Single ph./Three ph.</td><td></td></tr>
+    <tr><td>f</td><td>CT Ratio</td><td></td></tr>
+  </table>
+
+  <div class="section-title">10. Details of the Solar meter</div>
+  <table>
+    <tr><td>a</td><td>Make</td><td></td></tr>
+    <tr><td>b</td><td>Serial No.</td><td></td></tr>
+    <tr><td>c</td><td>Capacity</td><td></td></tr>
+    <tr><td>d</td><td>Type / Model</td><td></td></tr>
+    <tr><td>e</td><td>Single ph./Three ph.</td><td></td></tr>
+    <tr><td>f</td><td>CT Ratio</td><td></td></tr>
+  </table>
+
+  <p><strong>Note:</strong> The contractor also provides to the consumer Operation and Maintenance Manual at site & the detail of caution signage.</p>
+
+  <p>Certified that the above information for installed Solar Roof Top PV System under the net-metering arrangement and the equipment used to comply with the Technical and Safety standards as specified by the Nigam under net metering system.</p>
+
+  <div class="signature-row">
+    <span><strong>Signature of the Applicant</strong></span>
+    <span><strong>Name and Signature of the System Installer</strong></span>
+  </div>
+
+  <div class="address-block">
+    <div>
+      <p><strong>Name & Address:</strong><br>
+      Mr. Vijay Singh Yadav<br>
+      HN 235/30, Rajindra Park, Gurugram-122001</p>
+    </div>
+    <div>
+      <p><strong>JK Solar Pvt. Ltd.</strong><br>
+      Near Sec-10A chowk, Pataudi Road Kadipur,<br>
+      Gurugram</p>
+    </div>
+  </div>
+
+  <div class="enclosures">
+    <p><strong>Enclosures:</strong></p>
+    <ol>
+      <li>Copy of Interconnection Agreement on non-judicial stamp paper of Rs. <u>10</u> stamp paper with Nigam.</li>
+      <li>Copy of the IEC/IS-Test certificates of PV modules, Inverter etc.</li>
+      <li>Datasheets/Drawing for the array mounting System.</li>
+      <li>The Single-line wiring diagram (SLD) of the SPV System.</li>
+      <li>Copy of Maintenance & Operation information manual provided by the Installer.</li>
+    </ol>
+  </div>
+</body>
+</html>
