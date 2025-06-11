@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Client - JK SOLAR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #a7ffeb);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+.logo {
+  width: 120px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+    h1 {
+      color: #00695c;
+      margin-top: 10px;
+    }
+
+    .search-box {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 85%;
+      max-width: 400px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #00796b;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    #continueButton {
+      display: none;
+      margin-top: 15px;
+      background-color: #43a047;
+    }
+
+    @media screen and (max-width: 800px) {
+        body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #e0f7fa, #a7ffeb);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 30px; /* 🍽️ Add top space instead of centering vertically */
+}
+
+h1 {
+  color: #00695c;
+  margin-bottom: 20px;
+  font-size: 26px;
+}
+
+  .search-box {
+    padding: 20px;
+    width: 85%;
+    margin-top: 0px;
+  }
+
+  h1 {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  input[type="text"] {
+  width: 90%;
+  padding: 10px;
+  font-size: 14px; /* 🍽️ Reduced */
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+  button {
+    font-size: 15px;
+    padding: 10px 20px;
+  }
+}
+.search-box {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.search-box:hover {
+  transform: scale(1.015);
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  outline: none;
+  box-shadow: 0 0 0 2px #00968844;
+  transition: box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus {
+  box-shadow: 0 0 0 3px #00968899;
+}
+
+button {
+  background-color: #00796b;
+  color: white;
+  padding: 12px 26px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 121, 107, 0.3);
+}
+
+button:hover {
+  background-color: #004d40;
+  transform: scale(1.03);
+}
+
+.autocomplete-suggestions {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+  z-index: 999;
+}
+
+.autocomplete-suggestions div {
+  padding: 10px 12px;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.autocomplete-suggestions div:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-suggestions div:hover {
+  background: #e0f7fa;
+  color: #004d40;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+  </style>
+</head>
+<body>
+    <img src="/logo.png" alt="JK Solar Logo" class="logo" />
+
+  <h1>🔍 Search Client</h1>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Enter client name..." />
+    <div id="suggestions" class="autocomplete-suggestions"></div>
+    <button onclick="searchClient()">Search</button>
+
+    <div class="result" id="searchResult"></div>
+    <button id="continueButton" onclick="goToTimeline()">Continue</button>
+  </div>
+
+  <script>
+    function searchClient() {
+      const name = document.getElementById('searchInput').value.trim();
+      const resultBox = document.getElementById('searchResult');
+      const continueButton = document.getElementById('continueButton');
+
+      if (!name) {
+        resultBox.textContent = "Please enter a client name.";
+        resultBox.style.color = "red";
+        continueButton.style.display = 'none';
+        return;
+      }
+
+      fetch(`/search-client?name=${encodeURIComponent(name)}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Server error");
+          return res.json();
+        })
+        .then(data => {
+          if (data.found) {
+            resultBox.textContent = `✅ Client "${name}" found.`;
+            resultBox.style.color = "green";
+            continueButton.style.display = 'inline';
+          } else {
+            resultBox.textContent = `❌ Client "${name}" not found.`;
+            resultBox.style.color = "red";
+            continueButton.style.display = 'none';
+          }
+        })
+        .catch(err => {
+          resultBox.textContent = "🚫 Error searching client.";
+          resultBox.style.color = "red";
+          continueButton.style.display = 'none';
+        });
+    }
+
+    function goToTimeline() {
+      const clientName = document.getElementById('searchInput').value.trim();
+      if (!clientName) {
+        alert("Please enter a client name");
+        return;
+      }
+      localStorage.setItem("clientName", clientName);
+      window.location.href = "timeline.html";
+    }
+  </script>
+
+  <script>
+  const input = document.getElementById("searchInput");
+  const suggestionsBox = document.getElementById("suggestions");
+
+  input.addEventListener("input", async () => {
+    const query = input.value.trim();
+    suggestionsBox.innerHTML = "";
+
+    if (query.length < 1) {
+  suggestionsBox.innerHTML = "";
+  return;
+}
+
+
+    try {
+      const res = await fetch(`/api/client-suggestions?query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+
+      if (!data || !Array.isArray(data)) return;
+
+suggestionsBox.innerHTML = ""; // clear old
+
+data.forEach(client => {
+  const fullText = `${client.name}-${client.kw}-${client.mobile}`;
+  const div = document.createElement("div");
+  div.textContent = fullText;
+
+  div.onclick = () => {
+    input.value = fullText;
+    suggestionsBox.innerHTML = "";
+  };
+
+  suggestionsBox.appendChild(div);
+});
+
+    } catch (err) {
+      console.error("Autocomplete error:", err);
+    }
+  });
+</script>
+
+<script src="protect.js"></script>
+
+</body>
+</html>

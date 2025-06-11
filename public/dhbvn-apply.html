@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DHBVN Application – JK SOLAR</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #88a3ac, #4d8daa);
+      color: white;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .form-container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 800px;
+    }
+
+    h2 {
+      font-size: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ffcc00;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 600;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    select {
+      background: #f0f0f0;
+    }
+
+    input {
+      background: #ffffff;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #34ac50;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #1e7e34;
+    }
+    .form-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .form-table td {
+    padding: 10px;
+    vertical-align: top;
+    width: 50%;
+  }
+  .form-table label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .form-table select, .form-table input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  @media (max-width: 768px) {
+    .form-table tr {
+      display: block;
+    }
+    .form-table td {
+      display: block;
+      width: 100%;
+    }
+  }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 id="formHeading" style="text-align: center; color: gold; font-weight: bold;">
+   DHBVN Application Form For
+</h2>
+    <form id="dhbvnForm" >
+    <table class="form-table">
+    <tr>
+      <td>
+      <label for="ddlCircle">Circle:</label>
+      <select id="ddlCircle">
+        <option value="0">---Select---</option>
+        <option value="116">Bhiwani</option>
+        <option value="114">Faridabad</option>
+        <option value="121">Fatehabad</option>
+        <option value="113">Gurugram -I</option>
+        <option value="120">Gurugram -II</option>
+        <option value="112">Hisar</option>
+        <option value="117">Jind</option>
+        <option value="115">Narnaul</option>
+        <option value="118">Palwal</option>
+        <option value="119">Rewari</option>
+        <option value="111">Sirsa</option>
+      </select>
+      </td>
+      <td>
+
+      <label for="ddlSubDivision">Subdivision:</label>
+<select id="ddlSubDivision">
+  <option value="0">---Select---</option>
+  <option circleid="111" value="237">T11 ( I/Area ) </option>
+  <option circleid="111" value="238">T12 ( City SIRSA ) </option>
+  <option circleid="111" value="239">T13 ( Panjuana ) </option>
+  <option circleid="111" value="240">T14 ( Ding ) </option>
+  <option circleid="111" value="241">T15 ( Madho-Singhana ) </option>
+  <option circleid="111" value="242">T21 ( Sub-Urban SIRSA ) </option>
+  <option circleid="111" value="243">T22 ( Rania ) </option>
+  <option circleid="111" value="244">T23 ( Ellenabad ) </option>
+  <option circleid="111" value="245">T24 ( Nathusari ) </option>
+  <option circleid="111" value="246">T25 ( Jiwan Nagar ) </option>
+  <option circleid="111" value="247">T31 ( Dabwali ) </option>
+  <option circleid="111" value="248">T32 ( Kalanwali ) </option>
+  <option circleid="111" value="249">T33 ( Chautala ) </option>
+  <option circleid="112" value="250">H21 ( Satrod ) </option>
+  <option circleid="112" value="251">H22 ( Barwala ) </option>
+  <option circleid="112" value="252">H23 ( Adampur ) </option>
+  <option circleid="112" value="253">H24 ( Agroha ) </option>
+  <option circleid="112" value="254">H25 ( BALSAMAND ) </option>
+  <option circleid="112" value="255">H31 ( City Hansi ) </option>
+  <option circleid="112" value="256">H32 ( Sub-Urban Hansi ) </option>
+  <option circleid="112" value="257">H33 ( Narnaund ) </option>
+  <option circleid="112" value="258">H34 ( Mundhal ) </option>
+  <option circleid="112" value="259">H35 ( Sisai ) </option>
+  <option circleid="112" value="260">H36 ( Umra ) </option>
+  <option circleid="118" value="272">G44 ( Firojpurjhirka ) </option>
+  <option circleid="113" value="274">G23 ( Farukhnagar ) </option>
+  <option circleid="113" value="275">G31 ( Manesar ) </option>
+  <option circleid="113" value="276">G32 ( Pataudi ) </option>
+  <option circleid="113" value="277">G33 ( Bhorakalan ) </option>
+  <option circleid="118" value="280">G42 ( Nuh ) </option>
+  <option circleid="118" value="281">G43 ( Punhana ) </option>
+  <option circleid="118" value="282">G45 ( Nagina ) </option>
+  <option circleid="114" value="285">F14 ( No. 4 ) </option>
+  <option circleid="114" value="286">F11 ( East ) </option>
+  <option circleid="114" value="287">F12 ( West ) </option>
+  <option circleid="114" value="288">F13 ( Mathura Road ) </option>
+  <option circleid="114" value="289">F16 ( Tilpat ) </option>
+  <option circleid="114" value="290">F15 ( Kheri Kalan ) </option>
+  <option circleid="114" value="291">F21 ( No. 1 ) </option>
+  <option circleid="114" value="292">F22 ( No. 2 ) </option>
+  <option circleid="114" value="293">F23 ( No. 3 ) </option>
+  <option circleid="114" value="294">F24 ( Jawahar Colony ) </option>
+  <option circleid="114" value="295">F25 ( No. 5 ) </option>
+  <option circleid="114" value="296">F33 ( Sub-Urban Ballabhgarh ) </option>
+  <option circleid="114" value="297">F32 ( City-I Ballabhgarh ) </option>
+  <option circleid="114" value="298">F37 ( City-II Ballabhgarh ) </option>
+  <option circleid="114" value="299">F31 ( I/Area ) </option>
+  <option circleid="114" value="300">F34 ( Pali ) </option>
+  <option circleid="114" value="301">F35 ( Badraula ) </option>
+  <option circleid="114" value="302">F36 ( Chhainsa ) </option>
+  <option circleid="118" value="303">F42 ( Sub-Urban Palwal ) </option>
+  <option circleid="118" value="304">F41 ( City Palwal ) </option>
+  <option circleid="118" value="305">F43 ( Hodal ) </option>
+  <option circleid="118" value="306">F45 ( Hassanpur ) </option>
+  <option circleid="118" value="307">F44 ( Hathin ) </option>
+  <option circleid="118" value="308">F47 ( Sub-office deeghot, palwal ) </option>
+  <option circleid="118" value="309">F46 ( Sub office mandkola, palwal ) </option>
+  <option circleid="115" value="310">N11 ( City Narnaul ) </option>
+  <option circleid="115" value="311">N12 ( Sub-Urban Narnaul ) </option>
+  <option circleid="115" value="312">N13 ( Ateli ) </option>
+  <option circleid="115" value="313">N14 ( Nangal Chaudhary ) </option>
+  <option circleid="115" value="314">N21 ( City Mahender Garh Mahender Garh ) </option>
+  <option circleid="115" value="315">N22 ( Sub-Urban Mahender Garh ) </option>
+  <option circleid="115" value="316">N23 ( Satnali ) </option>
+  <option circleid="115" value="317">N24 ( Kanina ) </option>
+  <option circleid="119" value="318">R31 ( City-I Rewari ) </option>
+  <option circleid="119" value="319">R32 ( City-II Rewari ) </option>
+  <option circleid="119" value="320">R33 ( Sub-Urban Rewari ) </option>
+  <option circleid="119" value="321">R34 ( Buroli ) </option>
+  <option circleid="119" value="322">R37 ( Kosli ) </option>
+  <option circleid="119" value="323">R35 ( Sub office palhawas,Kosli ) </option>
+  <option circleid="119" value="324">R41 ( Dharuhera ) </option>
+  <option circleid="119" value="325">R42 ( Bawal ) </option>
+  <option circleid="119" value="326">R43 ( Pali Gothra ) </option>
+  <option circleid="116" value="327">B11 ( Sub-Urban-I Bhiwani ) </option>
+  <option circleid="116" value="328">B12 ( Sub-Urban-II Bhiwani ) </option>
+  <option circleid="116" value="329">B13 ( City Bhiwani ) </option>
+  <option circleid="116" value="330">B15 ( Bawani Khera ) </option>
+  <option circleid="116" value="331">B14 ( Tosham-I ) </option>
+  <option circleid="116" value="332">B16 ( Tosham-II ) </option>
+  <option circleid="116" value="333">B23 ( Jui ) </option>
+  <option circleid="116" value="334">B25 ( Behal ) </option>
+  <option circleid="116" value="335">B24 ( Dighawan Jattan ) </option>
+  <option circleid="116" value="336">B22 ( Loharu ) </option>
+  <option circleid="116" value="337">B21 ( Siwani ) </option>
+  <option circleid="116" value="338">B32 ( City Ch. Dadri Ch. Dadri ) </option>
+  <option circleid="116" value="339">B31 ( Sub-Urban Ch. Dadri ) </option>
+  <option circleid="116" value="340">B34 ( Jhojhu Kalan ) </option>
+  <option circleid="116" value="341">B36 ( Atela Kalan ) </option>
+  <option circleid="116" value="342">B35 ( Badhra ) </option>
+  <option circleid="116" value="343">B33 ( Sanjarwas ) </option>
+  <option circleid="117" value="344">J11 ( City Jind ) </option>
+  <option circleid="117" value="345">J12 ( Sub-Urban-I Jind ) </option>
+  <option circleid="117" value="346">J15 ( Sub-Urban-II Jind ) </option>
+  <option circleid="117" value="347">J13 ( Julana ) </option>
+  <option circleid="117" value="348">J14 ( Naguran ) </option>
+  <option circleid="117" value="349">J21 ( City Safidon ) </option>
+  <option circleid="117" value="350">J22 ( Sub-Urban Safidon ) </option>
+  <option circleid="117" value="351">J23 ( Pillukhera ) </option>
+  <option circleid="117" value="352">J31 ( City Narwana ) </option>
+  <option circleid="117" value="353">J32 ( Sub-Urban Narwana ) </option>
+  <option circleid="117" value="354">J34 ( Uchana ) </option>
+  <option circleid="117" value="355">J35 ( Garhi ) </option>
+  <option circleid="113" value="356">G11 ( IDC ) </option>
+  <option circleid="113" value="357">G13 ( New Colony ) </option>
+  <option circleid="113" value="358">G14 ( Kadipur ) </option>
+  <option circleid="112" value="365">H11 ( City Hisar ) </option>
+  <option circleid="112" value="366">H12 ( Civil Line Hisar ) </option>
+  <option circleid="118" value="376">W21 ( Chandhut ) </option>
+  <option circleid="111" value="377">T35 ( Kharian ) </option>
+  <option circleid="112" value="378">H61 ( Baddo Patti ) </option>
+  <option circleid="115" value="379">N26 ( Buchawas ) </option>
+  <option circleid="119" value="380">R38 ( Berli Khurd ) </option>
+  <option circleid="111" value="381">T36 ( Rori ) </option>
+  <option circleid="114" value="382">F19 ( Sec-21 ) </option>
+  <option circleid="120" value="383">G28 ( Sec-23 ) </option>
+  <option circleid="120" value="384">G51 ( Sec-31 ) </option>
+  <option circleid="120" value="385">G52 ( Sec-56 ) </option>
+  <option circleid="113" value="714">G12 ( New Palam Vihar ) </option>
+  <option circleid="120" value="721">G24 ( Maruti ) </option>
+  <option circleid="120" value="722">G21 ( DLF ) </option>
+  <option circleid="120" value="723">G26 ( South City ) </option>
+  <option circleid="120" value="724">G27 ( Sohna Road ) </option>
+  <option circleid="120" value="725">G22 ( Badshahpur ) </option>
+  <option circleid="120" value="726">G34 ( Taoru ) </option>
+  <option circleid="120" value="727">G41 ( Sohna ) </option>
+  <option circleid="121" value="728">H41 ( City Fatehabad ) </option>
+  <option circleid="121" value="729">H42 ( Sub-Urban Fatehabad ) </option>
+  <option circleid="121" value="730">H43 ( City Ratia ) </option>
+  <option circleid="121" value="731">H44 ( Sub-Urban Ratia ) </option>
+  <option circleid="121" value="732">H45 ( Bhattu ) </option>
+  <option circleid="121" value="733">H46 ( Badopal ) </option>
+  <option circleid="121" value="734">H51 ( City TOHANA ) </option>
+  <option circleid="121" value="735">H52 ( Sub-Urban TOHANA ) </option>
+  <option circleid="121" value="736">H53 ( Jakhal ) </option>
+  <option circleid="121" value="737">H54 ( Uklana ) </option>
+  <option circleid="121" value="738">H55 ( Bhuna ) </option>
+  <option circleid="119" value="739">R36 ( Nahar ) </option>
+  <option circleid="115" value="744">N15 ( SIHIMA ) </option>
+  <option circleid="112" value="745">H74 ( Azad Nagar ) </option>
+  <option circleid="113" value="746">G37 ( Haily Mandi ) </option>
+  <option circleid="113" value="747">G17 ( Sector-37 ) </option>
+  <option circleid="114" value="748">F38 ( City-III Ballabhgarh ) </option>
+  <option circleid="112" value="750">H13 ( Model Town Hisar ) </option>
+  <option circleid="114" value="751">F40 ( Sec-55 Ballabgarh ) </option>
+  <option circleid="119" value="752">N47 ( Jonawas ) </option>
+  <option circleid="113" value="753">G35 ( Kherki Daula ) </option>
+  <option circleid="120" value="754">G29 ( Sushant Lok ) </option>
+  <option circleid="112" value="755">H14 ( Sector 1 & 4 ) </option>
+  <option circleid="113" value="756">G15 ( Sec-5 ) </option>
+  <option circleid="118" value="757">W12 ( Huda Sec-2 ) </option>
+</select>
+</td>
+    </tr>
+    <tr>
+      <td>
+
+      <label for="ddlCategoryOfConnection">Category:</label>
+      <select id="ddlCategoryOfConnection">
+        <option value="0">--- Select ---</option>
+        <option value="DS">Domestic (DS)</option>
+        <option value="NDS">Non-Domestic (NDS)</option>
+        <option value="HT Industry">HT Industry</option>
+        <option value="LT Industry">LT Industry</option>
+        <option value="BS">Bulk Supply</option>
+        <option value="RT">Railway Traction</option>
+        <option value="IHDL">Hoarding/Decorative Light</option>
+        <option value="SL">Street Light</option>
+        <option value="PWW">Public Water Work</option>
+        <option value="LI">Lift Irrigation</option>
+        <option value="DMRC">DMRC</option>
+        <option value="BDS">Bulk Supply Domestic</option>
+        <option value="FPO">FPO</option>
+      </select>
+      </td>
+      <td>
+      <label for="ddlFirmType">Application Type:</label>
+      <select id="ddlFirmType">
+      <option value="0">---Select---</option>
+      <option value="individual">Individual</option>
+      <option value="gov">Government Department or Institution</option>
+      <option value="private">Private Institution or Establishment</option>
+      </select>
+      </td>
+      </tr>
+
+      <tr>
+      <td>
+      <label for="identityProof">Identity Proof:</label>
+      <input type="text" id="identityProof" placeholder="Enter ID Type (e.g. Aadhar, Voter ID)">
+      </td>
+      <td>
+      <label for="aadharNo">Aadhar Number:</label>
+      <input type="text" id="aadharNo" placeholder="Enter Aadhar Number">
+      </td>
+      </tr>
+
+      <tr>
+      <td>
+      <label for="accountNo">Account Number:</label>
+      <input type="text" id="accountNo" placeholder="Enter Electricity Account Number">
+      </td>
+      <td>
+      <label for="proposedCapacity">Proposed Solar Capacity (kW):</label>
+      <input type="number" id="proposedCapacity" placeholder="Enter Proposed Capacity">
+      </td>
+      </tr>
+
+      <tr>
+      <td>
+      <label for="ddlVoltageSupply">Voltage at which Supply has been given:</label>
+      <select id="ddlVoltageSupply">
+      <option value="0" selected>11 KV and Above</option>
+      <option value="1">400/415 Volt</option>
+      <option value="2">230/240 Volt</option>
+      </select>
+      </td>
+      <td>
+      <label for="ddlVoltageOutput">Voltage at Output of Solar Inverter:</label>
+      <select id="ddlVoltageOutput"> 
+      <option value="0" selected>11 KV and Above</option>
+      <option value="1">400/415 Volt</option>
+      <option value="2">230/240 Volt</option>
+      </select>
+      </td>
+      </tr>
+      
+      <tr>
+      <td colspan="2" style="text-align: center;">
+      <button type="submit">Submit DHBVN Application</button>
+      </td>
+      </tr>
+    </table>
+    </form>
+
+    <script>
+  // Read query params
+  const params = new URLSearchParams(window.location.search);
+  const name = decodeURIComponent(params.get("name") || "");
+  const kw = params.get("kw") || "";
+  const mobile = params.get("mobile") || "";
+
+  console.log("Client Row:", name, kw, mobile);
+
+  // You can now prefill or use these later when submitting
+</script>
+
+<script>
+  const circleDropdown = document.getElementById('ddlCircle');
+  const subDivisionDropdown = document.getElementById('ddlSubDivision');
+
+  // 🍱 Store all subdivision options on page load
+  const allSubOptions = Array.from(subDivisionDropdown.querySelectorAll('option')).filter(opt => opt.value !== "0");
+
+  circleDropdown.addEventListener('change', () => {
+    const selectedCircleId = circleDropdown.value;
+
+    // 🔄 Reset and re-add default option
+    subDivisionDropdown.innerHTML = '<option value="0">---Select---</option>';
+
+    // 🧩 Filter and append fresh options for selected circle
+    allSubOptions.forEach(opt => {
+      if (opt.getAttribute('circleid') === selectedCircleId) {
+        subDivisionDropdown.appendChild(opt.cloneNode(true));
+      }
+    });
+  });
+</script>
+
+
+<script>
+document.getElementById('dhbvnForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  if (!validateDHBVNForm()) return; // 💥 block if any required field is empty
+
+
+  // 📥 Get kw and mobile from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const kw = urlParams.get('kw')?.trim() || '';
+  const mobile = urlParams.get('mobile')?.trim() || '';
+
+  // 🧾 Fetch form fields
+  const circle = document.getElementById('ddlCircle').value;
+  const subdivision = document.getElementById('ddlSubDivision').value;
+  const category = document.getElementById('ddlCategoryOfConnection').value;
+  const firmType = document.getElementById('ddlFirmType')?.value || '';
+  const identityProof = document.getElementById('identityProof')?.value || '';
+  const aadharNo = document.getElementById('aadharNo')?.value || '';
+  const accountNumber = document.getElementById('accountNo')?.value || '';
+  const proposedCapacity = document.getElementById('proposedCapacity')?.value || '';
+  const voltageSupply = document.getElementById('ddlVoltageSupply')?.value || '';
+  const inverterOutput = document.getElementById('ddlVoltageOutput')?.value || '';
+
+  // 📦 Prepare payload
+  const payload = {
+    kw,
+    mobile,
+    circle,
+    subdivision,
+    category,
+    firmType,
+    identityProof,
+    aadharNo,
+    accountNo: accountNumber,
+    proposedCapacity,
+    voltageSupply,
+    voltageOutput: inverterOutput
+  };
+
+  // 🚀 Submit to backend
+  const response = await fetch('/submit-dhbvn-form', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  const result = await response.text();
+  showToast(result, result.includes('✅'));
+
+   if (result.includes('✅')) {
+      setTimeout(() => {
+        window.location.href = `/dhbvn-console.html?kw=${encodeURIComponent(kw)}&mobile=${encodeURIComponent(mobile)}`;
+
+      }, 3000); // 5 second delay before redirect
+    }
+});
+
+</script>
+<!-- Toast box -->
+<!-- Centered Toast Box -->
+<div id="toastBox" style="
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #222;
+  color: #fff;
+  padding: 18px 28px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 9999;
+  font-family: sans-serif;
+  text-align: center;
+  min-width: 300px;
+  transition: opacity 0.4s ease;
+"></div>
+
+
+<script>
+  function showToast(message, isSuccess = true) {
+    const toast = document.getElementById('toastBox');
+    toast.innerText = message;
+    toast.style.background = isSuccess ? '#28a745' : '#dc3545';
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => { toast.style.display = 'none'; }, 500);
+    }, 5000);
+  }
+</script>
+
+<script>
+  // 🍛 Inject customer's name into heading
+  const urlParams = new URLSearchParams(window.location.search);
+  const rawName = urlParams.get('name') || '';
+  const cleanedName = decodeURIComponent(rawName)
+    .replace(/(?:^|\s)(mrs?|mr)\.?\s*/gi, '') // remove 'Mrs.' or 'Mr.' if present
+    .trim();
+
+  const heading = document.getElementById('formHeading');
+  if (heading && cleanedName) {
+    heading.innerHTML = ` DHBVN Application Form For ${cleanedName}`;
+  }
+</script>
+<script>
+  function validateDHBVNForm() {
+    const fields = [
+      { id: 'ddlCircle', type: 'select' },
+      { id: 'ddlSubDivision', type: 'select' },
+      { id: 'ddlCategoryOfConnection', type: 'select' },
+      { id: 'ddlApplicationType', type: 'select' },
+      { id: 'ddlFirmType', type: 'select' },
+      { id: 'identityProof', type: 'text' },
+      { id: 'accountNo', type: 'text' },
+      { id: 'aadharNo', type: 'text' },
+      { id: 'proposedCapacity', type: 'text' }
+    ];
+
+    let allValid = true;
+
+    fields.forEach(({ id, type }) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const val = el.value.trim();
+      const isEmpty = (type === 'select') ? (val === '0' || val === '') : (val === '');
+
+      if (isEmpty) {
+        el.style.border = '2px solid red';
+        allValid = false;
+      } else {
+        el.style.border = '';
+      }
+    });
+
+    return allValid;
+  }
+</script>
+
+
+
+
+  </div>
+</body>
+</html>

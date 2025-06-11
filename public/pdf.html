@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Proposal Form Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
+      padding: 40px 20px;
+      max-width: 700px;
+      margin: auto;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
+    .field {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: fadeIn 0.5s ease forwards;
+    }
+    .field input {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      font-size: 16px;
+      width: 45%;
+      transition: 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .field input:focus {
+      border-color: #3498db;
+      outline: none;
+      box-shadow: 0 0 5px rgba(52,152,219,0.3);
+    }
+    .field button {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 18px;
+      transition: 0.3s ease;
+    }
+    .field button:hover {
+      background: #c0392b;
+    }
+    .buttons {
+      text-align: center;
+      margin-top: 25px;
+    }
+    button {
+      padding: 12px 20px;
+      margin: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: #3498db;
+      color: white;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    #editActions {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>✨ Build Your Proposal Form</h2>
+
+  <div id="formFields"></div>
+
+  <div class="buttons" id="editActions">
+    <button onclick="addField()">➕ Add Field</button>
+  </div>
+
+  <div class="buttons">
+    <button onclick="toggleEdit()">✏️ Edit Fields</button>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px;">
+  <button onclick="goToTemplatePage()" style="
+    padding: 12px 24px;
+    font-size: 16px;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  ">📄 Create Proposal</button>
+</div>
+
+<script>
+  function goToTemplatePage() {
+  const filledFields = formFields.map(f => ({
+    label: f.label,
+    value: f.value
+  }));
+  localStorage.setItem("formFields", JSON.stringify(filledFields));
+  window.location.href = "select-template.html";
+}
+
+</script>
+
+  <script>
+    let formFields = [];
+    let isEditMode = false;
+
+    const userEmail = "muninderpal@jk17.onmicrosoft.com";
+    const oneDrivePath = "TemplateData/formFields.json";
+
+    async function getAccessToken() {
+      const response = await fetch("/get-token");
+      const data = await response.json();
+      return data.access_token;
+    }
+
+    async function saveFieldsToOneDrive() {
+      const labelsOnly = formFields.map(f => ({ label: f.label }));
+      await fetch("/save-form-fields", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(labelsOnly)
+      });
+    }
+
+    async function loadFieldsFromOneDrive() {
+      try {
+        const response = await fetch("/get-form-fields");
+        if (!response.ok) throw new Error("Failed to fetch fields");
+        const labels = await response.json();
+        formFields = labels.map(f => ({ label: f.label, value: "" }));
+      } catch (e) {
+        console.warn("⚠️ Loading failed, starting with one blank field.");
+        formFields = [{ label: "", value: "" }];
+      }
+
+      renderFields();
+    }
+
+    function renderFields() {
+      const container = document.getElementById("formFields");
+      container.innerHTML = "";
+
+      formFields.forEach((field, index) => {
+        const fieldDiv = document.createElement("div");
+        fieldDiv.className = "field";
+
+        const labelInput = document.createElement("input");
+        labelInput.placeholder = "Field Label";
+        labelInput.value = field.label;
+        labelInput.disabled = !isEditMode;
+        labelInput.oninput = (e) => {
+          formFields[index].label = e.target.value;
+          saveFieldsToOneDrive();
+        };
+
+        const valueInput = document.createElement("input");
+        valueInput.placeholder = "Field Value";
+        valueInput.value = field.value;
+        valueInput.oninput = (e) => {
+          formFields[index].value = e.target.value;
+        };
+
+        fieldDiv.appendChild(labelInput);
+        fieldDiv.appendChild(valueInput);
+
+        if (isEditMode) {
+          const deleteBtn = document.createElement("button");
+          deleteBtn.innerHTML = "🗑️";
+          deleteBtn.onclick = () => {
+            formFields.splice(index, 1);
+            saveFieldsToOneDrive();
+            renderFields();
+          };
+          fieldDiv.appendChild(deleteBtn);
+        }
+
+        container.appendChild(fieldDiv);
+      });
+    }
+
+    function addField() {
+      formFields.push({ label: "", value: "" });
+      saveFieldsToOneDrive();
+      renderFields();
+    }
+
+    function toggleEdit() {
+      isEditMode = !isEditMode;
+      document.getElementById("editActions").style.display = isEditMode ? "block" : "none";
+      renderFields();
+    }
+
+    loadFieldsFromOneDrive();
+  </script>
+
+</body>
+</html>

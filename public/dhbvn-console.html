@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DHBVN Login Automation</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f9f9;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #0b5394;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background-color: #0b5394;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #083b6b;
+    }
+    .toast {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #4caf50;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      animation: fadeInOut 3s ease-in-out;
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(-10px); }
+      10% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+
+    #logBox {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 30px;
+      padding: 15px;
+      text-align: left;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 250px;
+      overflow-y: auto;
+      white-space: pre-line;
+      font-family: monospace;
+      font-size: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⚡ DHBVN Auto Login Panel</h1>
+  <button onclick="startLogin()">Start DHBVN Login</button>
+
+  <div id="successToast" class="toast">✅ Login process started!</div>
+  <div id="errorToast" class="toast" style="background: #e53935;">❌ Login failed. Try again!</div>
+
+  <div id="logBox">📝 Log Output:\n</div>
+
+   <script>
+  // Get KW and Mobile from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const kwFromURL = urlParams.get('kw')?.trim();
+  const mobileFromURL = urlParams.get('mobile')?.trim();
+
+  // Make them available globally if needed later
+  window.dhbvnKW = kwFromURL;
+  window.dhbvnMobile = mobileFromURL;
+
+  console.log('📩 KW:', kwFromURL, 'Mobile:', mobileFromURL);
+</script>
+  <script>
+    function showToast(id) {
+      const toast = document.getElementById(id);
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+
+    function appendLog(message) {
+      const logBox = document.getElementById('logBox');
+      logBox.innerText += `\n${message}`;
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+  </script>
+
+<script>
+  async function startLogin() {
+    appendLog("🚀 Sending request to server...");
+    showToast('successToast');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const kw = urlParams.get('kw')?.trim();
+    const mobile = urlParams.get('mobile')?.trim();
+
+    if (!kw || !mobile) {
+      appendLog("❌ KW or Mobile missing in URL.");
+      showToast('errorToast');
+      return;
+    }
+
+    const response = await fetch('/login-dhbvn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kw, mobile })
+    });
+
+    const reader = response.body.getReader(); // ✅ (was 'res' typo earlier)
+    const decoder = new TextDecoder('utf-8');
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // hold last incomplete line
+
+      for (const line of lines) {
+        if (line.trim()) appendLog(line);
+      }
+    }
+
+    // Flush any remaining log
+    if (buffer.trim()) appendLog(buffer.trim());
+  }
+</script>
+
+
+<script>
+  window.onload = async function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const kw = urlParams.get('kw') || '';
+  const mobile = urlParams.get('mobile') || '';
+
+  try {
+    const res = await fetch('/login-dhbvn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kw, mobile })
+    });
+
+    const data = await res.json();
+    console.log('📦 Received DHBVN Data:', data);
+
+    // Now fill your form fields here using data like:
+    document.getElementById('ddlCircle').value = data.circle || '';
+    document.getElementById('ddlSubDivision').value = data.subdivision || '';
+    document.getElementById('ddlCategoryOfConnection').value = data.category || '';
+    // Add more mappings as needed...
+  } catch (err) {
+    console.error('❌ Failed to fetch DHBVN data:', err);
+  }
+};
+
+</script>
+</body>
+</html>

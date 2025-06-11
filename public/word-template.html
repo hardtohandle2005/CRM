@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Word Proposal Designer</title>
+  <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.7.2/dist/docx-preview.min.js"></script>
+  <script>
+  window.docx = window.docx || window["docx-preview"];
+</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.10.11/interact.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
+      padding: 20px;
+    }
+    h2 { text-align: center; }
+    #docxContainer {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .drag-box {
+      position: absolute;
+      padding: 5px 10px;
+      background: #fff;
+      border: 1px dashed #aaa;
+      font-size: 14px;
+      cursor: move;
+      z-index: 10;
+    }
+    #controls {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    select, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    .docx {
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+  </style>
+</head>
+<body>
+
+<h2>📝 Word Proposal Designer</h2>
+
+<div id="controls">
+  <select id="fieldSelector">
+    <option value="">-- Select Field --</option>
+  </select>
+  <button onclick="addBox()">➕ Add Text Box</button>
+  <button onclick="addFormulaBox()">➗ Add Formula Box</button>
+  <button onclick="saveLayout()">💾 Save Layout</button>
+  <button onclick="exportAsPDF()">📤 Export to PDF</button>
+</div>
+
+<div id="docxContainer" contenteditable="true"></div>
+
+<script>
+  const container = document.getElementById("docxContainer");
+  const fieldSelector = document.getElementById("fieldSelector");
+  const templateName = sessionStorage.getItem("selectedTemplate");
+  const boxes = [];
+  let formFields = [];
+
+  // Load formFields from localStorage
+  try {
+    const stored = localStorage.getItem("formFields");
+    if (stored) formFields = JSON.parse(stored);
+  } catch {}
+
+  formFields.forEach(field => {
+    const opt = document.createElement("option");
+    opt.value = field.label;
+    opt.textContent = field.label;
+    fieldSelector.appendChild(opt);
+  });
+
+  function getFieldValue(label) {
+    const match = formFields.find(f => f.label === label);
+    return match && match.value ? match.value : label;
+  }
+
+  function evaluateFormula(expression) {
+    try {
+      const mathScope = {
+        round: Math.round,
+        floor: Math.floor,
+        ceil: Math.ceil,
+        abs: Math.abs,
+        sqrt: Math.sqrt,
+        pow: Math.pow
+      };
+      const expr = expression.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, match => {
+        if (mathScope[match]) return `mathScope.${match}`;
+        const field = formFields.find(f => f.label.toLowerCase() === match.toLowerCase());
+        return field && !isNaN(field.value) ? field.value : "0";
+      });
+      return Function("mathScope", `return ${expr}`)(mathScope);
+    } catch {
+      return "Invalid";
+    }
+  }
+
+  function setupBoxDrag(box) {
+    interact(box).draggable({
+      listeners: {
+        move(event) {
+          const target = event.target;
+          const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+          const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+        }
+      }
+    });
+  }
+
+  function addBox() {
+    const value = fieldSelector.value;
+    if (!value) return alert("Please select a field");
+    const box = document.createElement("div");
+    box.className = "drag-box";
+    box.textContent = getFieldValue(value);
+    box.setAttribute("data-field", value);
+    box.setAttribute("data-x", 100);
+    box.setAttribute("data-y", 50);
+    box.style.transform = `translate(100px, 50px)`;
+    container.appendChild(box);
+    boxes.push(box);
+    setupBoxDrag(box);
+  }
+
+  function addFormulaBox() {
+    const box = document.createElement("div");
+    box.className = "drag-box formula-box";
+    box.textContent = "Formula";
+    box.setAttribute("data-formula", "0");
+    box.setAttribute("data-x", 150);
+    box.setAttribute("data-y", 100);
+    box.style.transform = `translate(150px, 100px)`;
+    container.appendChild(box);
+    boxes.push(box);
+    setupBoxDrag(box);
+  }
+
+  async function saveLayout() {
+    const layout = boxes.map(box => ({
+      field: box.getAttribute("data-field") || null,
+      isFormula: box.classList.contains("formula-box"),
+      formula: box.classList.contains("formula-box") ? box.textContent : null,
+      x: parseFloat(box.getAttribute("data-x")) || 0,
+      y: parseFloat(box.getAttribute("data-y")) || 0,
+      width: box.style.width,
+      height: box.style.height,
+      fontSize: box.style.fontSize,
+      fontWeight: box.style.fontWeight
+    }));
+    const res = await fetch("/save-template-layout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ templateName, layout })
+    });
+    if (res.ok) alert("✅ Layout saved!");
+    else alert("❌ Failed to save layout");
+  }
+
+  async function exportAsPDF() {
+    const canvas = await html2canvas(container);
+    const imgData = canvas.toDataURL("image/png");
+    const pdfDoc = await PDFLib.PDFDocument.create();
+    const page = pdfDoc.addPage([canvas.width, canvas.height]);
+    const pngImage = await pdfDoc.embedPng(imgData);
+    page.drawImage(pngImage, { x: 0, y: 0, width: canvas.width, height: canvas.height });
+    const bytes = await pdfDoc.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${templateName}.pdf`;
+    link.click();
+  }
+
+  async function loadWordTemplate() {
+  const templateName = sessionStorage.getItem("selectedTemplate");
+  const container = document.getElementById("docxContainer");
+
+  fetch(`/convert-word-to-html?name=${encodeURIComponent(templateName)}`)
+    .then(res => res.text())
+    .then(html => {
+      container.innerHTML = html;
+    })
+    .catch(err => {
+      container.innerHTML = `<p style="color:red">❌ Could not load HTML version of Word file</p>`;
+      console.error("Preview load failed:", err);
+    });
+}
+
+
+  window.onload = loadWordTemplate;
+</script>
+
+</body>
+</html>

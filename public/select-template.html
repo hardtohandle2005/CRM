@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Proposal Template Designer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 30px;
+      background: #f4f6f9;
+      max-width: 900px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .section {
+      margin: 30px 0;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #3498db;
+      color: white;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    #pdfPreview {
+      margin-top: 30px;
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      color: #aaa;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📄 Proposal Template Designer</h2>
+
+  <div class="section">
+    <label for="templateName">📝 Template Name</label>
+    <input type="text" id="templateName" placeholder="e.g. 10KW Proposal" />
+
+    <label for="pdfFile">📁 Upload PDF File</label>
+    <input type="file" id="pdfFile" accept="application/pdf" />
+
+    <button onclick="uploadTemplate()">Upload & Start Designing</button>
+  </div>
+
+  <div class="section">
+    <label for="existingTemplates">📂 Select Existing Template</label>
+    <select id="existingTemplates">
+      <option value="">-- Select Template --</option>
+    </select>
+    <button onclick="loadTemplate()">Open Saved Template</button>
+  </div>
+
+  <div id="pdfPreview">
+    PDF preview will appear here once uploaded or selected.
+  </div>
+
+  <script>
+    // Placeholder logic – backend coming next
+    async function uploadTemplate() {
+      const name = document.getElementById('templateName').value.trim();
+      const file = document.getElementById('pdfFile').files[0];
+      if (!name || !file) return alert("Please enter a name and select a PDF file.");
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("name", name);
+
+      const res = await fetch("/upload-template", {
+        method: "POST",
+        body: formData
+      });
+
+      if (res.ok) {
+        sessionStorage.setItem("selectedTemplate", name);
+  window.location.href = "template-designer.html";
+      } else {
+        alert("❌ Upload failed");
+      }
+    }
+
+    function loadTemplate() {
+  const selected = document.getElementById("existingTemplates").value;
+  if (!selected) return alert("Please select a template");
+
+  sessionStorage.setItem("selectedTemplate", selected);
+  window.location.href = "template-designer.html";
+}
+
+
+        async function loadTemplateList() {
+      const res = await fetch("/list-templates");
+      if (!res.ok) {
+        console.warn("Failed to fetch templates.");
+        return;
+      }
+
+      const list = await res.json();
+      const dropdown = document.getElementById("existingTemplates");
+      dropdown.innerHTML = `<option value="">-- Select Template --</option>`;
+
+      list.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        dropdown.appendChild(option);
+      });
+    }
+
+    // Call this on page load
+    window.onload = () => {
+      loadTemplateList();
+    };
+
+  </script>
+</body>
+</html>

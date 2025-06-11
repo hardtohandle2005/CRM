@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pending DHBVN Clients – JK SOLAR</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #c3d9e4, #c6dee6, #acccd8);
+      color: rgb(4, 150, 248);
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+      color: rgb(17, 12, 12);
+    }
+
+    th, td {
+      padding: 14px 20px;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    thead {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    tbody tr {
+      transition: background 0.3s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(15, 12, 12, 0.08);
+    }
+
+    th {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      font-size: 1rem;
+    }
+
+    .apply-btn {
+      padding: 8px 18px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #28a745, #35b150);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .apply-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #218838, #1e7e34);
+    }
+
+    @media (max-width: 768px) {
+      th, td {
+        padding: 12px;
+        font-size: 0.85rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Application Pending Clients List– JK SOLAR</h2>
+  <div class="table-container">
+    <table id="clientTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>KW</th>
+          <th>Mobile</th>
+          <th>Address</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+ 
+
+  <script>
+    async function loadClients() {
+      const res = await fetch('/api/dhbvn-list');
+      const data = await res.json();
+      const tbody = document.querySelector('#clientTable tbody');
+      tbody.innerHTML = '';
+
+      data.forEach(client => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${client.name}</td>
+          <td>${client.kw}</td>
+          <td>${client.mobile}</td>
+          <td>${client.address}</td>
+          <td><button class="apply-btn" onclick="applyDHBVN('${client.name}', '${client.kw}', '${client.mobile}')">Apply</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    loadClients();
+  </script>
+
+  <script>
+  async function loadClients() {
+    const res = await fetch('/api/dhbvn-list');
+    const data = await res.json();
+    const tbody = document.querySelector('#clientTable tbody');
+    tbody.innerHTML = '';
+
+    data.forEach(client => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${client.name}</td>
+        <td>${client.kw}</td>
+        <td>${client.mobile}</td>
+        <td>${client.address}</td>
+        <td><button class="apply-btn" onclick="applyDHBVN('${encodeURIComponent(client.name)}', '${client.kw}', '${client.mobile}')">Apply</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function applyDHBVN(name, kw, mobile) {
+    // Redirect to apply page with query params
+    const url = `dhbvn-apply.html?name=${name}&kw=${kw}&mobile=${mobile}`;
+    window.location.href = url;
+  }
+
+  loadClients();
+</script>
+
+</body>
+</html>

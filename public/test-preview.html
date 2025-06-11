@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Word Preview Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.7.2/dist/docx-preview.min.js"></script>
+  <style>
+    #docxContainer {
+      padding: 30px;
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+    }
+    .docx {
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>Word File Preview</h2>
+  <input type="file" id="upload" accept=".docx" />
+  <div id="docxContainer"></div>
+
+  <script>
+    document.getElementById("upload").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const buffer = await file.arrayBuffer();
+      const container = document.getElementById("docxContainer");
+
+      try {
+        await window.docx.renderAsync(buffer, container, null, {
+          className: "docx",
+          inWrapper: true,
+          breakPages: true,
+        });
+      } catch (err) {
+        console.error("Render failed:", err);
+        container.innerHTML = `<p style="color:red;">❌ Failed to render DOCX file</p>`;
+      }
+    });
+  </script>
+</body>
+</html>

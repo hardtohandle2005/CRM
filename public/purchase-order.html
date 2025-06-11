@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Purchase Order - Page 1</title>
+  <style>
+    body {
+      font-family: Calibri, sans-serif;
+      background-color: #fff;
+      color: #000;
+      padding: 40px;
+      font-size: 16px;
+    }
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .bold { font-weight: bold; }
+    .underline { text-decoration: underline; }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .table th, .table td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: left;
+    }
+    .subject {
+      font-weight: bold;
+      margin: 30px 0 10px;
+    }
+    ol li {
+      margin-top: 10px;
+    }
+    .nested {
+      list-style: lower-roman;
+      margin-left: 20px;
+    }
+    .annexure {
+      margin-top: 60px;
+    }
+    .annexure h3 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .annexure-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      border: 2px solid #000;
+    }
+    .annexure-table th {
+      background-color: #f0f0f0;
+      font-weight: bold;
+      text-align: center;
+      border: 1px solid #000;
+    }
+    .annexure-table td {
+      border: 1px solid #000;
+      padding: 8px;
+      vertical-align: top;
+    }
+    .center {
+      text-align: center;
+    }
+    
+  </style>
+</head>
+<body>
+
+  
+
+<div>
+  <p class="bold">From</p>
+  <p class="bold">{{name}}</span></p>
+  <p class="bold">{{address}}</span></p>
+  <p class="bold">M.No. {{mobile}}</span></p>
+</div>
+
+<div style="margin-top: 30px;">
+  <p class="bold">To</p>
+  <p class="bold">JK Solar Pvt. Ltd.</p>
+  <p>Near Sector 10-A Chowk, Kadipur<br> Pataudi Road Gurgaon –122001 Haryana</p>
+</div>
+
+<div class="header-section">
+  <p class="bold">Order No: {{ref}}</span></p>
+  <p class="bold">Dated: {{today}}</span></p>
+</div>
+
+<p class="subject">
+  Subject: Sales Order for Supply, Installation and Commissioning of {{kw}} kw Grid Connected Solar Roof Top Power Plant (with Lithium batteries).
+</p>
+
+<p class="bold">Dear Sir,</p>
+<p>
+  In reference to your proposal dated {{proposalDate}}</span> on above mentioned subject, we are pleased to release work order for supply, Installation and commissioning of grid connected {{kw}} kw Roof Top Grid Tied Solar Power Plant in favour of JK Solar Pvt. Ltd. As per terms and conditions mentioned below:
+</p>
+
+<table class="table">
+  <tr>
+    <th>Sr. No.</th>
+    <th>Description</th>
+    <th>Capacity/ Per Kw</th>
+    <th>Cost</th>
+  </tr>
+  <tr>
+    <td>1.</td>
+    <td>
+      Supply of material for {{kw}} kw Solar PV Plants (Containing Solar PV Modules, Solar Inverter, Solar Mounting structure and other accessories) Installation and commissioning. Amount will be pay by consumer.
+    </td>
+    <td>{{kw}} kw</td>
+    <td>{{price}}</td>
+  </tr>
+  <tr>
+    <td colspan="3" class="bold">Net cost</td>
+    <td>{{price}}</td>
+  </tr>
+</table>
+
+<ol>
+  <li><span class="bold">Solar Modules, Solar Inverters and Other components</span> of PV Plants shall be supplied as technical specifications and guidelines of MNRE, GOI/HREDA for Solar Roof Top Power Plant.</li>
+  <li><span class="bold">Make and specifications, quantities of Material</span> to be supplied for 15kw solar PV power Plant is attached to Annexure-1.</li>
+  <li><span class="bold">Freight and Delivery:</span> Inclusive, for Gurgaon.</li>
+  <li><span class="bold">Unloading & Placement:</span> Including.</li>
+  <li><span class="bold">GST</span> include in above price @ 12%</li>
+  <li><span class="bold">Net Metering</span> Include in above price.</li>
+  <li><span class="bold">Completion Period:</span> 30 Days from the date of receipt of advance.</li>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+   <br/>
+   <br/>
+   <br/>
+  <li><span class="bold">Payments:</span>
+    <ol class="nested">
+      <li>30% advance at Purchase order.</li>
+      <li>60% after structure installation and earthing.</li>
+      <li>10% after commissioning of solar plant.</li>
+    </ol>
+    Interest will be charged after 7 days @ 3% p.m. in the case of delay in payments.
+  </li>
+  <li><span class="bold">Test Certificates, Catalogues, Operation & Maintenance Manual:</span> Product technical catalogs, Operation & Maintenance Manual and MNRE channel partner certificate shall be submitted at the time of delivery.</li>
+  <li><span class="bold">Warranty:</span>
+    <ol class="nested">
+      <li>Product warranty against manufacturing defects on PV modules is 30 years and 30 years performance warranty on generation as per manufacturer.
+        <ul>
+          <li>90% after 15 years</li>
+          <li>80% after 30 Years</li>
+        </ul>
+      </li>
+      <li>7 years on Manufacturer warranty against manufacturing defects on Inverter.</li>
+      <li>5 years AMC except cleaning will be provided by JK Solar Pvt Ltd.</li>
+      <li>Surge Protection Device that is used for protection for surge, not covered under warranty.</li>
+    </ol>
+  </li>
+  <li><span class="bold">Arbitration:</span> As per provisions of the Arbitration and Reconciliation Act of 1996 and amended from time to time.</li>
+  <li><span class="bold">Jurisdiction:</span> The dispute if any shall fall within the jurisdiction of the court of Gurgaon Haryana.</li>
+</ol>
+
+<p>If the above offer is acceptable to you, please sign and stamp the duplicate copy of this order and return back it to us as a token of your acceptance of the same.</p>
+
+<p>Thanking You</p>
+<br>
+<p>({{name}}</span>)</p>
+<br><br>
+<p>Purchase order has been accepted on above terms and conditions and NEFT received of amount Rupees _______________________ ( ________________________ ) is received</p>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div class="annexure">
+  <h3>Annexure-1<br>Bill of Materials: BOM {{kw}} kw</h3>
+  <table class="annexure-table">
+    <tr>
+      <th>Sr.No</th>
+      <th>Material</th>
+      <th>Specifications</th>
+      <th>Nos.</th>
+      <th>Make</th>
+    </tr>
+    <tr>
+  <td class="center">1</td>
+  <td>Solar PV module</td>
+  <td>Mono Perc Bifacial Topcon Tier-1 {{panelWp}} WP, Half Cut 144 cells or rating as per site design</td>
+  <td class="center">{{panelQty}} nos</td>
+  <td>{{panelBrand}}</td>
+</tr>
+<tr>
+  <td class="center">2</td>
+  <td>Grid inverter</td>
+  <td>String inverter {{kw}} Kw as per system design with Wi-Fi and Minimum efficiency of 98%</td>
+  <td class="center">01</td>
+  <td>{{inverterBrand}}</td>
+</tr>
+
+    <tr><td class="center">3</td><td>Mounting structure</td><td>Galvanised Iron (Galvalume) 90x40x15x2</td><td class="center">01</td><td>Standard or as per Site Design, JSW and</td></tr>
+    <tr><td class="center">4</td><td>LT Panel (ACDB/DCDB)</td><td>Input AC MCBs, RCCB,AC DC Surge Protection Device</td><td class="center">As per Requirement</td><td>ABB, L&T, Schneider, Phoenix, Merson, Ctel</td></tr>
+    <tr><td class="center">5</td><td>Cables from modules To Inverter</td><td>Solar cable 4 sqmm, copper tin coated (DC) as per design</td><td class="center">As per Requirement</td><td>Polycab, or Equivalent</td></tr>
+    <tr><td class="center">6</td><td>Cables from inverter To LT Panel ACDB</td><td>XLPE insulated copper cable (AC) 6 sq mm</td><td class="center">As per Requirement</td><td>Polycab, Finolex, KEI or equivalent</td></tr>
+    <tr><td class="center">7</td><td>Cable from LT Panel ACDB to Solar Gross Meter</td><td>16 sq mm Al XLPE cable</td><td class="center">As per requirement</td><td>KEI, Ecko</td></tr>
+    <tr><td class="center">8</td><td>Connecters</td><td>PVC(+ive & -ive)</td><td class="center">As per Requirement</td><td>Elcom, Tyco, or Equivalent</td></tr>
+    <tr><td class="center">9</td><td>Earthing</td><td>Copper Earthing 3mtrs</td><td class="center"></td><td></td></tr>
+    <tr><td class="center">10</td><td>Lightning Arrestor</td><td>Conventional Type copper pipe 1200mm</td><td class="center">01</td><td>Standard Make</td></tr>
+  </table>
+</div>
+
+</body>
+</html>

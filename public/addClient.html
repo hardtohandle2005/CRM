@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Client - JK Solar CRM</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <meta name="theme-color" content="#004aad">
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f2f2f2, #e9f0ff);
+      margin: 0;
+      padding: 30px 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #004aad;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .form-container {
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.08);
+      transition: all 0.3s ease-in-out;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="file"] {
+
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s ease-in-out;
+    }
+
+    input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    button[type="submit"] {
+      margin-top: 30px;
+      padding: 14px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .back-link a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 20px;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="file"] {
+        font-size: 13px;
+      }
+    }
+    .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background-color: white;
+    padding: 25px 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    font-family: 'Segoe UI', sans-serif;
+    width: 90%;
+    max-width: 400px;
+  }
+  .modal-actions button {
+    margin: 15px 10px 0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .modal-actions button:first-child {
+    background-color: #2d7a2d;
+    color: white;
+  }
+  .modal-actions button:last-child {
+    background-color: #bbb;
+    color: black;
+  }
+  .toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: white;
+  color: #444;
+  padding: 18px 28px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 9999;
+  border: 1px solid #e0e0e0;
+}
+
+.toast.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#toast-icon {
+  font-size: 20px;
+}
+
+
+  </style>
+</head>
+<body>
+  <div style="text-align: center; margin-top: -40px; padding: 20px 0 10px;">
+    <img src="logo.png" alt="JK Solar Logo" style="height: 70px;" />
+  </div>
+  
+  <h1>Add New Client</h1>
+
+  <div class="form-container">
+  <form id="clientForm" action="/submit-client" method="POST" enctype="multipart/form-data" onsubmit="return confirmBeforeSubmit(event)">
+    <label>Date:</label>
+    <input type="text" name="date" readonly>
+
+    <label>Name:</label>
+    <input type="text" name="name" placeholder="Type client name with Mr./Mrs."  required>
+
+    <label>Father/Spouse Name</label>
+    <input type="text" name="so" placeholder="Type S/o or D/o or W/o with name"required >
+
+    <label for="houseNo">H.No.:</label>
+    <input type="text" id="houseNo" name="houseNo">
+
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location">
+  
+    <label for="landmark">Landmark:</label>
+    <input type="text" id="landmark" name="landmark">
+  
+    <label for="district">District:</label>
+    <input type="text" id="district" name="district">
+  
+    <label for="state">State:</label>
+    <input type="text" id="state" name="state">
+
+    <label for="pin">Pin Code:</label>
+    <input type="text" id="pin" name="pin">
+  
+    <label for="mobile">Mobile No.:</label>
+    <input type="text" id="mobile" name="mobile" required>
+  
+    <label for="email">Email ID:</label>
+    <input type="email" id="email" name="email">
+  
+    <label for="kw">KW:</label>
+    <input type="number" id="kw" name="kw" required>
+  
+    <label for="advance">Advance:</label>
+    <input type="number" id="advance" name="advance">
+  
+    <label for="totalCost">Total Cost:</label>
+    <input type="number" id="totalCost" name="totalCost">
+ 
+
+    <label>Aadhar Front:</label>
+    <input type="file" name="aadharFront" onchange="previewImage(this, 'previewAadharFront')" required />
+    <img id="previewAadharFront" style="max-width: 150px; margin-top: 10px; display: none;" />
+
+    <label>Aadhar Back:</label>
+    <input type="file" name="aadharBack" onchange="previewImage(this, 'previewAadharBack')" required />
+    <img id="previewAadharBack" style="max-width: 150px; margin-top: 10px; display: none;" />
+
+    <label>PAN Card:</label>
+    <input type="file" name="panCard" onchange="previewImage(this, 'previewPanCard')" required />
+    <img id="previewPanCard" style="max-width: 150px; margin-top: 10px; display: none;" />
+
+    <label>Electricity Bill:</label>
+    <input type="file" name="bill" onchange="previewImage(this, 'previewElect')" required />
+    <img id="previewElect" style="max-width: 150px; margin-top: 10px; display: none;" />
+
+    <label>Ownership Proof:</label>
+    <input type="file" name="ownershipProof" onchange="previewImage(this, 'previewProof')" required />
+    <img id="previewProof" style="max-width: 150px; margin-top: 10px; display: none;" />
+
+    <label>Cancel Cheque:</label>
+    <input type="file" name="cancelCheque" onchange="previewImage(this, 'previewCancel')" required />
+    <img id="previewCancel" style="max-width: 150px; margin-top: 10px; display: none;" />
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <p>⚠️ Data didn't matched proposal.<br/>📄Net Metering and Purchase agreement will not be created.<br/>📤 Do you still want to continue?</p>
+    <div class="modal-actions">
+      <button onclick="proceedForm(true)">Yes, Continue</button>
+      <button onclick="proceedForm(false)">No, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">
+  <span id="toast-icon">⚠️</span>
+  <span id="toast-message">Placeholder message</span>
+</div>
+
+<script>
+  let shouldSubmit = false;
+
+  async function confirmBeforeSubmit(event) {
+    event.preventDefault();
+
+    const nameInput = document.querySelector('[name="name"]').value.trim();
+  if (!/^(mr\.|mrs\.|ms\.|shri)/i.test(nameInput)) {
+    showToast("Please mention Mr., Mrs., Ms., or Shri in the name.", "❗");
+    return false;
+  }
+
+   const soInput = document.querySelector('[name="so"]').value.trim();
+  if (!/^(s\/o|d\/o|w\/o)/i.test(soInput)) {
+    showToast("Please mention S/o, D/o, or W/o in the Father/Spouse Name.", "❗");
+    return false;
+  }
+
+    if (shouldSubmit) {
+      document.getElementById('clientForm').submit();
+      return;
+    }
+
+    const name = document.querySelector('[name="name"]').value.trim().toLowerCase();
+    const mobile = document.querySelector('[name="mobile"]').value.trim();
+    const kw = document.querySelector('[name="kw"]').value.trim();
+
+    try {
+  const res = await fetch(`/api/check-proposal-match?mobile=${mobile}&kw=${kw}`);
+  const result = await res.json();
+
+  if (result.match) {
+    shouldSubmit = true;
+    document.getElementById('clientForm').submit();
+  } else {
+    if (result.reason === 'already_exists') {
+      showToast("This Mobile number already exists in records. Please Change", "🚫");
+
+    } else {
+      document.getElementById('confirmModal').style.display = 'flex';
+    }
+  }
+} catch (err) {
+  alert("⚠️ Could not check proposal match. Please try again.");
+  console.error(err);
+}
+
+  }
+function showToast(message, icon = '') {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-message').textContent = message;
+  document.getElementById('toast-icon').textContent = icon;
+
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 4000);
+}
+
+  function proceedForm(yes) {
+    document.getElementById('confirmModal').style.display = 'none';
+    if (yes) {
+      shouldSubmit = true;
+      document.getElementById('clientForm').submit();
+    }
+  }
+</script>
+
+  <div class="back-link">
+    <a href="/index.html">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    document.querySelector('[name="date"]').value = new Date().toLocaleDateString();
+  </script>
+
+<script>
+  document.querySelector('form').addEventListener('submit', function (e) {
+    const requiredFileFields = [
+      'aadhaarFront',
+      'aadhaarBack',
+      'panCard',
+      'electricityBill',
+      'cancelCheque'
+    ];
+
+    let allFilesPresent = true;
+
+    requiredFileFields.forEach(id => {
+      const fileInput = document.getElementById(id);
+      if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        allFilesPresent = false;
+        fileInput.style.border = '2px solid red'; // highlight missing field
+      } else {
+        fileInput.style.border = ''; // reset if filled
+      }
+    });
+
+    if (!allFilesPresent) {
+      e.preventDefault();
+      alert('Please upload all required documents before submitting.');
+    }
+  });
+</script>
+<script>
+  function previewImage(input, previewId) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+  }
+
+ 
+</script>
+
+
+
+<script src="protect.js"></script>
+
+</body>
+</html>

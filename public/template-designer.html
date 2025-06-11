@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Template Designer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.10.11/interact.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .page-layer {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    canvas {
+      width: 100%;
+      display: block;
+    }
+    .drag-box {
+      position: absolute;
+      padding: 4px 8px;
+      background: transparent;
+      color: #000;
+      font-size: 16px;
+      border: none;
+      font-weight: normal;
+      font-family: inherit;
+      cursor: move;
+      user-select: none;
+      z-index: 10;
+      min-width: 40px;
+      min-height: 20px;
+    }
+    #controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    select, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    #trashBin {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: #ff4d4d;
+      color: #fff;
+      text-align: center;
+      line-height: 60px;
+      font-size: 24px;
+      border-radius: 50%;
+      z-index: 1000;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    #trashBin.active {
+      box-shadow: 0 0 15px 5px #ff0000aa;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+<h2>📐 Design Your Proposal Template</h2>
+<div id="controls">
+  <select id="fieldSelector">
+    <option value="">-- Select Field --</option>
+  </select>
+  <button id="addBoxBtn">➕ Add Text Box</button>
+  <button id="addFormulaBtn">➗ Add Formula Box</button>
+  <button onclick="saveLayout()">💾 Save Template Layout</button>
+  <button onclick="generateExactPDFPhotoCopy()">📥 Download Exact PDF</button>
+<button onclick="downloadCanvasImage()">🖼️ Download as Image</button>
+
+
+
+
+</div>
+<div id="pdfContainer"></div>
+<div id="trashBin">🗑️</div>
+<script>
+  const templateName = sessionStorage.getItem("selectedTemplate");
+  const fieldSelector = document.getElementById("fieldSelector");
+  const container = document.getElementById("pdfContainer");
+  const trashBin = document.getElementById("trashBin");
+  const boxes = [];
+  let activeResizable = null;
+  let formFields = [];
+  try {
+    const stored = localStorage.getItem("formFields");
+    if (stored) {
+      formFields = JSON.parse(stored);
+    }
+  } catch (e) {
+    console.warn("Failed to parse formFields from localStorage");
+  }
+  formFields.forEach(field => {
+    const opt = document.createElement("option");
+    opt.value = field.label;
+    opt.textContent = field.label;
+    fieldSelector.appendChild(opt);
+  });
+  function getFieldValue(label) {
+    const match = formFields.find(f => f.label === label);
+    return match && match.value ? match.value : label;
+  }
+  function enableResize(box) {
+    if (activeResizable && activeResizable !== box) {
+      interact(activeResizable).resizable(false);
+    }
+    activeResizable = box;
+    interact(box).resizable({
+      edges: { left: true, right: true, bottom: true, top: true }
+    }).on('resizemove', function (event) {
+      const width = event.rect.width;
+      const height = event.rect.height;
+      box.style.width = width + 'px';
+      box.style.height = height + 'px';
+      const baseHeight = 20;
+      const baseFontSize = 16;
+      const newFontSize = (height / baseHeight) * baseFontSize;
+      box.style.fontSize = `${newFontSize}px`;
+    });
+  }
+  document.addEventListener('keydown', function (event) {
+    if (event.key === "Escape" && activeResizable) {
+      interact(activeResizable).resizable(false);
+      activeResizable = null;
+    }
+  });
+  function setupBoxDrag(box) {
+    interact(box).draggable({
+      listeners: {
+        move(event) {
+          const target = event.target;
+          const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+          const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+
+          const binRect = trashBin.getBoundingClientRect();
+          const boxRect = target.getBoundingClientRect();
+
+          if (
+            boxRect.right > binRect.left &&
+            boxRect.left < binRect.right &&
+            boxRect.bottom > binRect.top &&
+            boxRect.top < binRect.bottom
+          ) {
+            trashBin.classList.add("active");
+            target.style.opacity = 0.3;
+          } else {
+            trashBin.classList.remove("active");
+            target.style.opacity = 1;
+          }
+        },
+        end(event) {
+          const target = event.target;
+          const binRect = trashBin.getBoundingClientRect();
+          const boxRect = target.getBoundingClientRect();
+
+          trashBin.classList.remove("active");
+          target.style.opacity = 1;
+
+          if (
+            boxRect.right > binRect.left &&
+            boxRect.left < binRect.right &&
+            boxRect.bottom > binRect.top &&
+            boxRect.top < binRect.bottom
+          ) {
+            target.remove();
+          }
+        }
+      }
+    });
+  }
+  function addBox() {
+    const value = fieldSelector.value;
+    if (!value) return alert("Select a field first");
+    const pageLayers = document.querySelectorAll(".page-layer");
+    const firstPage = pageLayers[0];
+    const box = document.createElement("div");
+    box.className = "drag-box";
+    box.textContent = getFieldValue(value);
+    box.setAttribute("data-field", value);
+    box.contentEditable = true;
+    box.style.transform = "translate(277px, -1180px)";
+    box.setAttribute("data-x", 277);
+    box.setAttribute("data-y", -1180);
+    firstPage.appendChild(box);
+    boxes.push(box);
+    setupBoxDrag(box);
+    box.addEventListener("dblclick", () => enableResize(box));
+    box.addEventListener("click", (e) => {
+      if (e.detail === 3) {
+        box.style.fontWeight = box.style.fontWeight === 'bold' ? 'normal' : 'bold';
+      }
+    });
+  }
+  function addFormulaBox() {
+    const box = document.createElement("div");
+    box.className = "drag-box formula-box";
+    box.contentEditable = true;
+    box.textContent = "Formula here";
+    box.setAttribute("data-formula", "Formula here");
+    box.style.transform = "translate(400px, -1220px)";
+    box.setAttribute("data-x", 400);
+    box.setAttribute("data-y", -1220);
+    container.querySelector(".page-layer")?.appendChild(box);
+    boxes.push(box);
+    setupBoxDrag(box);
+    box.addEventListener("dblclick", () => enableResize(box));
+    box.addEventListener("click", (e) => {
+      if (e.detail === 3) {
+        box.style.fontWeight = box.style.fontWeight === 'bold' ? 'normal' : 'bold';
+      }
+    });
+  }
+  function evaluateFormula(expression) {
+  try {
+    const mathScope = {
+      round: Math.round,
+      floor: Math.floor,
+      ceil: Math.ceil,
+      abs: Math.abs,
+      sqrt: Math.sqrt,
+      pow: Math.pow
+    };
+
+    const expr = expression.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (match) => {
+      if (mathScope[match]) return `mathScope.${match}`;
+      const field = formFields.find(f => f.label.toLowerCase() === match.toLowerCase());
+      return field && !isNaN(field.value) ? field.value : "0";
+    });
+
+    console.log("Evaluated expression:", expr);
+    return Function("mathScope", `return ${expr}`)(mathScope);
+  } catch {
+    return "Invalid";
+  }
+}
+
+  async function saveLayout() {
+    const layout = boxes.map(box => ({
+      field: box.getAttribute("data-field") || null,
+      isFormula: box.classList.contains("formula-box"),
+      formula: box.classList.contains("formula-box") ? box.textContent : null,
+      x: parseFloat(box.getAttribute("data-x")) || 0,
+      y: parseFloat(box.getAttribute("data-y")) || 0,
+      fontSize: box.style.fontSize,
+  fontWeight: box.style.fontWeight,
+  fontStyle: box.style.fontStyle,
+  textDecoration: box.style.textDecoration,
+  color: box.style.color,
+  width: box.style.width,
+  height: box.style.height
+    }));
+    const res = await fetch("/save-template-layout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ templateName, layout })
+    });
+    if (res.ok) alert("✅ Layout saved to OneDrive!");
+    else alert("❌ Failed to save layout");
+  }
+  async function loadSavedLayout() {
+    try {
+      const res = await fetch(`/get-template-layout?name=${encodeURIComponent(templateName)}`);
+      if (!res.ok) return;
+      const layout = await res.json();
+      const pageLayers = document.querySelectorAll(".page-layer");
+      const targetPage = pageLayers[0];
+      layout.forEach(item => {
+        const box = document.createElement("div");
+        box.className = "drag-box";
+        box.setAttribute("data-x", item.x);
+        box.setAttribute("data-y", item.y);
+        box.style.transform = `translate(${item.x}px, ${item.y}px)`;
+        box.contentEditable = true;
+        box.style.fontSize = item.fontSize || "16px";
+box.style.fontWeight = item.fontWeight || "normal";
+box.style.fontStyle = item.fontStyle || "normal";
+box.style.textDecoration = item.textDecoration || "none";
+box.style.color = item.color || "#000";
+box.style.width = item.width || "auto";
+box.style.height = item.height || "auto";
+
+        if (item.isFormula) {
+          box.classList.add("formula-box");
+          box.textContent = evaluateFormula(item.formula || "");
+          box.setAttribute("data-formula", item.formula || "");
+        } else {
+          box.setAttribute("data-field", item.field);
+          box.textContent = getFieldValue(item.field);
+        }
+        targetPage.appendChild(box);
+        boxes.push(box);
+        setupBoxDrag(box);
+        box.addEventListener("dblclick", () => enableResize(box));
+        box.addEventListener("click", (e) => {
+          if (e.detail === 3) {
+            box.style.fontWeight = box.style.fontWeight === 'bold' ? 'normal' : 'bold';
+          }
+        });
+      });
+    } catch (e) {
+      console.warn("No layout found for template", templateName);
+    }
+  }
+  async function loadPDF() {
+    const url = `/get-pdf-template?name=${encodeURIComponent(templateName)}`;
+    const loadingTask = pdfjsLib.getDocument(url);
+    const pdf = await loadingTask.promise;
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 1.0 });
+
+      const pageLayer = document.createElement("div");
+      pageLayer.className = "page-layer";
+      const canvas = document.createElement("canvas");
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      const ctx = canvas.getContext("2d");
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      pageLayer.appendChild(canvas);
+      container.appendChild(pageLayer);
+    }
+    loadSavedLayout();
+  }
+  window.onload = () => {
+    document.getElementById("addBoxBtn").addEventListener("click", addBox);
+    document.getElementById("addFormulaBtn").addEventListener("click", addFormulaBox);
+    loadPDF();
+  };
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="module">
+import {
+  PDFDocument,
+  rgb,
+  StandardFonts
+} from 'https://cdn.skypack.dev/pdf-lib';
+import html2canvas from 'https://cdn.skypack.dev/html2canvas';
+
+window.generatePDFPhotoCopy = async function () {
+  const canvasElement = document.querySelector(".page-layer");
+  if (!canvasElement) return alert("Canvas not found");
+
+  const canvasImage = await html2canvas(canvasElement);
+  const imgData = canvasImage.toDataURL("image/png");
+
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage([canvasImage.width, canvasImage.height]);
+
+  const pngImage = await pdfDoc.embedPng(imgData);
+  page.drawImage(pngImage, {
+    x: 0,
+    y: 0,
+    width: canvasImage.width,
+    height: canvasImage.height
+  });
+
+  const finalBytes = await pdfDoc.save();
+  const blob = new Blob([finalBytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${templateName || 'canvas'}.pdf`;
+  link.click();
+};
+</script>
+
+<script>
+  function downloadCanvasImage() {
+  const canvasElement = document.querySelector(".page-layer");
+  html2canvas(canvasElement).then(canvas => {
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = `${templateName || 'canvas'}.png`;
+    link.click();
+  });
+}
+
+</script>
+  
+
+
+
+
+
+</body>
+</html>
